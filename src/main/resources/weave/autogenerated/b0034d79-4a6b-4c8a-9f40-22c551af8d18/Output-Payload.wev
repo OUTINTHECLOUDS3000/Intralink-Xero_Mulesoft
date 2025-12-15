@@ -1,0 +1,164 @@
+%dw 2.0
+
+type auto_b0034d79_4a6b_4c8a_9f40_22c551af8d18_Output_Payload = {
+  Contacts?: Array<{    Discount?: Number,     UpdatedDateUTC?: String,     ValidationErrors?: Array<{      Message?: String,       _?: Any    }>, 
+    Website?: String, 
+    PaymentTerms?: {
+      Sales?: {
+        Type?: "OFCURRENTMONTH" | "OFFOLLOWINGMONTH" | "DAYSAFTERBILLMONTH" | "DAYSAFTERBILLDATE", 
+        Day?: Number, 
+        _?: Any
+      }, 
+      Bills?: {
+        Type?: "OFCURRENTMONTH" | "OFFOLLOWINGMONTH" | "DAYSAFTERBILLMONTH" | "DAYSAFTERBILLDATE", 
+        Day?: Number, 
+        _?: Any
+      }, 
+      _?: Any
+    }, 
+    Attachments?: Array<{      FileName?: String,       ContentLength?: Number,       IncludeOnline?: Boolean,       AttachmentID?: String,       Url?: String,       MimeType?: String,       _?: Any    }>, 
+    Name?: String, 
+    SalesTrackingCategories?: Array<{      TrackingCategoryName?: String,       TrackingOptionName?: String,       _?: Any    }>, 
+    Addresses?: Array<{      AddressLine3?: String,       AddressLine2?: String,       AddressLine1?: String,       AttentionTo?: String,       AddressLine4?: String,       Region?: String,       PostalCode?: String,       Country?: String,       City?: String,       AddressType?: "POBOX" | "STREET",       _?: Any    }>, 
+    SalesDefaultAccountCode?: String, 
+    IsSupplier?: Boolean, 
+    Phones?: Array<{      PhoneAreaCode?: String,       PhoneCountryCode?: String,       PhoneType?: "OFFICE" | "DDI" | "FAX" | "DEFAULT" | "MOBILE",       PhoneNumber?: String,       _?: Any    }>, 
+    AccountsReceivableTaxType?: String, 
+    AccountsPayableTaxType?: String, 
+    BankAccountDetails?: String, 
+    PurchasesDefaultAccountCode?: String, 
+    BatchPayments?: {
+      BankAccountName?: String, 
+      Details?: String, 
+      Reference?: String, 
+      Code?: String, 
+      BankAccountNumber?: String, 
+      _?: Any
+    }, 
+    ContactNumber?: String, 
+    TaxNumber?: String, 
+    BrandingTheme?: {
+      CreatedDateUTC?: String, 
+      BrandingThemeID?: String, 
+      Type?: "INVOICE", 
+      LogoUrl?: String, 
+      SortOrder?: Number, 
+      Name?: String, 
+      _?: Any
+    }, 
+    ContactGroups?: Array<{      Status?: "ACTIVE" | "DELETED",       ContactGroupID?: String,       Contacts?: anonymousType_0,       Name?: String,       _?: Any    }>, 
+    IsCustomer?: Boolean, 
+    StatusAttributeString?: String, 
+    DefaultCurrency?: "" | "FJD" | "MXN" | "SCR" | "TVD" | "CDF" | "BBD" | "GTQ" | "CLP" | "HNL" | "UGX" | "ZAR" | "TND" | "STN" | "CUC" | "BSD" | "SLL" | "SDG" | "IQD" | "CUP" | "GMD" | "TWD" | "RSD" | "DOP" | "KMF" | "MYR" | "FKP" | "XOF" | "GEL" | "UYU" | "MAD" | "CVE" | "TOP" | "AZN" | "OMR" | "PGK" | "KES" | "SEK" | "BTN" | "UAH" | "GNF" | "ERN" | "MZN" | "SVC" | "ARS" | "QAR" | "IRR" | "CNY" | "THB" | "UZS" | "XPF" | "MRU" | "BDT" | "LYD" | "BMD" | "KWD" | "PHP" | "RUB" | "PYG" | "ISK" | "JMD" | "COP" | "MKD" | "USD" | "DZD" | "PAB" | "GGP" | "SGD" | "ETB" | "JEP" | "KGS" | "SOS" | "VEF" | "VUV" | "LAK" | "BND" | "ZMK" | "XAF" | "LRD" | "CHF" | "HRK" | "ALL" | "DJF" | "ZMW" | "TZS" | "VND" | "SPL" | "AUD" | "ILS" | "GHS" | "GYD" | "KPW" | "BOB" | "KHR" | "MDL" | "IDR" | "KYD" | "AMD" | "BWP" | "SHP" | "TRY" | "LBP" | "TJS" | "JOD" | "AED" | "HKD" | "RWF" | "EUR" | "LSL" | "DKK" | "ZWD" | "CAD" | "BGN" | "MMK" | "MUR" | "NOK" | "SYP" | "IMP" | "GIP" | "RON" | "LKR" | "NGN" | "CRC" | "CZK" | "PKR" | "XCD" | "ANG" | "HTG" | "BHD" | "KZT" | "SRD" | "SZL" | "LTL" | "SAR" | "TTD" | "YER" | "MVR" | "AFN" | "INR" | "AWG" | "KRW" | "NPR" | "JPY" | "MNT" | "AOA" | "PLN" | "GBP" | "SBD" | "BYN" | "HUF" | "BYR" | "BIF" | "MWK" | "MGA" | "XDR" | "BZD" | "BAM" | "EGP" | "MOP" | "NAD" | "NIO" | "PEN" | "NZD" | "WST" | "TMT" | "BRL", 
+    FirstName?: String, 
+    SkypeUserName?: String, 
+    HasAttachments?: Boolean, 
+    Balances?: {
+      AccountsPayable?: {
+        Outstanding?: Number, 
+        Overdue?: Number, 
+        _?: Any
+      }, 
+      AccountsReceivable?: {
+        Outstanding?: Number, 
+        Overdue?: Number, 
+        _?: Any
+      }, 
+      _?: Any
+    }, 
+    ContactID?: String, 
+    EmailAddress?: String, 
+    AccountNumber?: String, 
+    PurchasesTrackingCategories?: Array<{      TrackingCategoryName?: String,       TrackingOptionName?: String,       _?: Any    }>, 
+    TrackingCategoryOption?: String, 
+    ContactPersons?: Array<{      IncludeInEmails?: Boolean,       FirstName?: String,       LastName?: String,       EmailAddress?: String,       _?: Any    }>, 
+    ContactStatus?: "ACTIVE" | "ARCHIVED" | "GDPRREQUEST", 
+    LastName?: String, 
+    TrackingCategoryName?: String, 
+    HasValidationErrors?: Boolean, 
+    XeroNetworkKey?: String, 
+    _?: Any
+  }>, 
+  _?: Any
+}
+type anonymousType_0 = Array<{  Discount?: Number,   UpdatedDateUTC?: String,   ValidationErrors?: Array<{    Message?: String,     _?: Any  }>, 
+  Website?: String, 
+  PaymentTerms?: {
+    Sales?: {
+      Type?: "OFCURRENTMONTH" | "OFFOLLOWINGMONTH" | "DAYSAFTERBILLMONTH" | "DAYSAFTERBILLDATE", 
+      Day?: Number, 
+      _?: Any
+    }, 
+    Bills?: {
+      Type?: "OFCURRENTMONTH" | "OFFOLLOWINGMONTH" | "DAYSAFTERBILLMONTH" | "DAYSAFTERBILLDATE", 
+      Day?: Number, 
+      _?: Any
+    }, 
+    _?: Any
+  }, 
+  Attachments?: Array<{    FileName?: String,     ContentLength?: Number,     IncludeOnline?: Boolean,     AttachmentID?: String,     Url?: String,     MimeType?: String,     _?: Any  }>, 
+  Name?: String, 
+  SalesTrackingCategories?: Array<{    TrackingCategoryName?: String,     TrackingOptionName?: String,     _?: Any  }>, 
+  Addresses?: Array<{    AddressLine3?: String,     AddressLine2?: String,     AddressLine1?: String,     AttentionTo?: String,     AddressLine4?: String,     Region?: String,     PostalCode?: String,     Country?: String,     City?: String,     AddressType?: "POBOX" | "STREET",     _?: Any  }>, 
+  SalesDefaultAccountCode?: String, 
+  IsSupplier?: Boolean, 
+  Phones?: Array<{    PhoneAreaCode?: String,     PhoneCountryCode?: String,     PhoneType?: "OFFICE" | "DDI" | "FAX" | "DEFAULT" | "MOBILE",     PhoneNumber?: String,     _?: Any  }>, 
+  AccountsReceivableTaxType?: String, 
+  AccountsPayableTaxType?: String, 
+  BankAccountDetails?: String, 
+  PurchasesDefaultAccountCode?: String, 
+  BatchPayments?: {
+    BankAccountName?: String, 
+    Details?: String, 
+    Reference?: String, 
+    Code?: String, 
+    BankAccountNumber?: String, 
+    _?: Any
+  }, 
+  ContactNumber?: String, 
+  TaxNumber?: String, 
+  BrandingTheme?: {
+    CreatedDateUTC?: String, 
+    BrandingThemeID?: String, 
+    Type?: "INVOICE", 
+    LogoUrl?: String, 
+    SortOrder?: Number, 
+    Name?: String, 
+    _?: Any
+  }, 
+  ContactGroups?: Array<{    Status?: "ACTIVE" | "DELETED",     ContactGroupID?: String,     Contacts?: anonymousType_0,     Name?: String,     _?: Any  }>, 
+  IsCustomer?: Boolean, 
+  StatusAttributeString?: String, 
+  DefaultCurrency?: "" | "FJD" | "MXN" | "SCR" | "TVD" | "CDF" | "BBD" | "GTQ" | "CLP" | "HNL" | "UGX" | "ZAR" | "TND" | "STN" | "CUC" | "BSD" | "SLL" | "SDG" | "IQD" | "CUP" | "GMD" | "TWD" | "RSD" | "DOP" | "KMF" | "MYR" | "FKP" | "XOF" | "GEL" | "UYU" | "MAD" | "CVE" | "TOP" | "AZN" | "OMR" | "PGK" | "KES" | "SEK" | "BTN" | "UAH" | "GNF" | "ERN" | "MZN" | "SVC" | "ARS" | "QAR" | "IRR" | "CNY" | "THB" | "UZS" | "XPF" | "MRU" | "BDT" | "LYD" | "BMD" | "KWD" | "PHP" | "RUB" | "PYG" | "ISK" | "JMD" | "COP" | "MKD" | "USD" | "DZD" | "PAB" | "GGP" | "SGD" | "ETB" | "JEP" | "KGS" | "SOS" | "VEF" | "VUV" | "LAK" | "BND" | "ZMK" | "XAF" | "LRD" | "CHF" | "HRK" | "ALL" | "DJF" | "ZMW" | "TZS" | "VND" | "SPL" | "AUD" | "ILS" | "GHS" | "GYD" | "KPW" | "BOB" | "KHR" | "MDL" | "IDR" | "KYD" | "AMD" | "BWP" | "SHP" | "TRY" | "LBP" | "TJS" | "JOD" | "AED" | "HKD" | "RWF" | "EUR" | "LSL" | "DKK" | "ZWD" | "CAD" | "BGN" | "MMK" | "MUR" | "NOK" | "SYP" | "IMP" | "GIP" | "RON" | "LKR" | "NGN" | "CRC" | "CZK" | "PKR" | "XCD" | "ANG" | "HTG" | "BHD" | "KZT" | "SRD" | "SZL" | "LTL" | "SAR" | "TTD" | "YER" | "MVR" | "AFN" | "INR" | "AWG" | "KRW" | "NPR" | "JPY" | "MNT" | "AOA" | "PLN" | "GBP" | "SBD" | "BYN" | "HUF" | "BYR" | "BIF" | "MWK" | "MGA" | "XDR" | "BZD" | "BAM" | "EGP" | "MOP" | "NAD" | "NIO" | "PEN" | "NZD" | "WST" | "TMT" | "BRL", 
+  FirstName?: String, 
+  SkypeUserName?: String, 
+  HasAttachments?: Boolean, 
+  Balances?: {
+    AccountsPayable?: {
+      Outstanding?: Number, 
+      Overdue?: Number, 
+      _?: Any
+    }, 
+    AccountsReceivable?: {
+      Outstanding?: Number, 
+      Overdue?: Number, 
+      _?: Any
+    }, 
+    _?: Any
+  }, 
+  ContactID?: String, 
+  EmailAddress?: String, 
+  AccountNumber?: String, 
+  PurchasesTrackingCategories?: Array<{    TrackingCategoryName?: String,     TrackingOptionName?: String,     _?: Any  }>, 
+  TrackingCategoryOption?: String, 
+  ContactPersons?: Array<{    IncludeInEmails?: Boolean,     FirstName?: String,     LastName?: String,     EmailAddress?: String,     _?: Any  }>, 
+  ContactStatus?: "ACTIVE" | "ARCHIVED" | "GDPRREQUEST", 
+  LastName?: String, 
+  TrackingCategoryName?: String, 
+  HasValidationErrors?: Boolean, 
+  XeroNetworkKey?: String, 
+  _?: Any
+}>
+
+
+

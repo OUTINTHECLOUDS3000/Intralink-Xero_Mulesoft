@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:salesforce-composite="http://www.mulesoft.org/schema/mule/salesforce-composite" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:oauth="http://www.mulesoft.org/schema/mule/oauth"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xero-accounting="http://www.mulesoft.org/schema/mule/xero-accounting" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/xero-accounting http://www.mulesoft.org/schema/mule/xero-accounting/current/mule-xero-accounting.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/oauth http://www.mulesoft.org/schema/mule/oauth/current/mule-oauth.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/salesforce-composite http://www.mulesoft.org/schema/mule/salesforce-composite/current/mule-salesforce-composite.xsd">
+	<oauth:token-manager-config name="Token_manager_config" doc:name="Token manager config" doc:id="09ec4955-edcf-4e8b-9858-c269d31a3495" />
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="341edcb6-71da-4a55-a4d8-629a76c4565e">
+		<http:request-connection host="api.xero.com" protocol="HTTPS">
+			<http:authentication >
+				<oauth:authorization-code-grant-type externalCallbackUrl="http://localhost:8082/callback" localAuthorizationUrl="https://localhost:8082/login" authorizationUrl="https://login.xero.com/identity/connect/authorize" clientId="6BF95E3E2F624CE298094CDD92785E1C" clientSecret="tKmiTuEZqE2-itf5HNlS8TA98dNcy3RJ-Ui-VkU1cdnCnB8k" tokenUrl="https://identity.xero.com/connect/token" localCallbackUrl="http://localhost:8082/callback" scopes="email openid profile accounting.transactions accounting.transactions.read accounting.settings accounting.settings.read accounting.contacts accounting.contacts.read" encodeClientCredentialsInBody="false" tokenManager="Token_manager_config"/>
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<xero-accounting:config name="Xero_Accounting_Connector_Config" doc:name="Xero Accounting Connector Config" doc:id="8ad2e302-b7ec-4231-b642-bb2ec35e8bbd" >
+		<xero-accounting:oauth2-connection connectionTimeout="1" connectionTimeoutUnit="HOURS" connectionIdleTimeout="1" connectionIdleTimeoutUnit="DAYS">
+			<xero-accounting:oauth-authorization-code consumerKey="6BF95E3E2F624CE298094CDD92785E1C" consumerSecret="tKmiTuEZqE2-itf5HNlS8TA98dNcy3RJ-Ui-VkU1cdnCnB8k" scopes="email openid profile offline_access accounting.transactions accounting.transactions.read accounting.settings accounting.settings.read accounting.contacts accounting.contacts.read"/>
+			<xero-accounting:oauth-callback-config listenerConfig="HTTP_Listener_config" callbackPath="/callback" authorizePath="/authorize" externalCallbackUrl="https://xero-connection-ace3rr.5sc6y6-2.usa-e2.cloudhub.io/callback" />
+		</xero-accounting:oauth2-connection>
+		<expiration-policy maxIdleTime="1" timeUnit="HOURS" />
+	</xero-accounting:config>
+	<salesforce:sfdc-config name="Salesforce_Config_Sandbox" doc:name="Salesforce Config" doc:id="ec61116b-f470-4d41-9cbd-a2d1ec07e678" >
+		<salesforce:oauth-client-credentials-connection >
+			<salesforce:oauth-client-credentials clientId="3MVG9fJfMmi0N395cZ1OSSt_4w2Ux2fUl_JDHXZc36FcJDFE4r1AYAECJv_xrSj10ldw62tZENU0G5PK.ThMi" clientSecret="2DD9FB6CE4FC8F16BC7CEB8FA02E64A86F0B9416AFEC5C8E2E79C7E13C84A8F2" tokenUrl="https://intralinkwm--oitcdev.sandbox.my.salesforce.com/services/oauth2/token" />
+		</salesforce:oauth-client-credentials-connection>
+	</salesforce:sfdc-config>
+	<salesforce:sfdc-config name="Salesforce_Config_OldProduction" doc:name="Salesforce Config" doc:id="c0ec03e6-e3ed-45cb-b900-8d47403ec675" fetchAllApexSoapMetadata="true" fetchAllApexRestMetadata="true">
+		<salesforce:oauth-client-credentials-connection >
+			<salesforce:oauth-client-credentials clientId="3MVG9fe4g9fhX0E6xioxDVz7dKvx2hVS08xAsZb0N3Ph9qt888aHWgziXMroshOQXBHxy7aswu9LTQl0QG9Om" clientSecret="AF504696B45603599A552B3D717275B37EFE5B2AEF984787BE8DB2BFEB203359" tokenUrl="https://intralinkwealthmanagement.my.salesforce.com/services/oauth2/token" />
+		</salesforce:oauth-client-credentials-connection>
+	</salesforce:sfdc-config>
+	<salesforce:sfdc-config name="Salesforce_Config_New_Production" doc:name="Salesforce Config" doc:id="d6d0919e-b811-4e00-911f-16afeddca36a" >
+		<salesforce:oauth-client-credentials-connection >
+			<salesforce:oauth-client-credentials clientId="3MVG9HB6vm3GZZR.WZNUm9SfERGIHDa43qAmoreuC8WB2Syw99aFKJJgIhu7ndzqo_BZa0ytlhqNhtSE9eyHJ" clientSecret="CC0A87E5D63E810FEA0CDDC13C0033B5DD55EB2EFAEC15D3AFC5CDAC5477485E" tokenUrl="https://intralinkwm.my.salesforce.com/services/oauth2/token" />
+		</salesforce:oauth-client-credentials-connection>
+	</salesforce:sfdc-config>
+	<flow name="Test-Listner-To-Xero-Without-Connector" doc:id="5448d1b4-a8f9-400a-8644-2fe391df5b4d" >
+		<http:listener doc:name="Listener" doc:id="f34fba71-17ec-4be3-874f-b56309c16b6b" config-ref="HTTP_Listener_config" path="/getAccounts"/>
+		<http:request method="GET" doc:name="Request" doc:id="87e98717-d954-44ff-9a04-01c8cbb5fa06" config-ref="HTTP_Request_configuration" path="/api.xro/2.0/Accounts">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"xero-tenant-id" : "5ae5c021-7b20-4415-89f0-f0bbe5a76681"
+}]]]></http:headers>
+		</http:request>
+		<xero-accounting:get-contacts doc:name="Get Contacts" doc:id="258e5294-12c8-46ba-8eb8-804a1cb78bf3" config-ref="Xero_Accounting_Connector_Config" xeroTenantId="e7404c42-51bf-436c-9dde-d0f2242be08c"/>
+		<ee:transform doc:name="Transform Message" doc:id="a64ecabd-e1fc-4b96-a584-eca25db0240c">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="Test-Listner-To-Xero" doc:id="4c26e459-8f49-4b83-89fa-bfb249dbbd91" >
+		<http:listener doc:name="Listener" doc:id="a2ee6faf-772c-4f19-8f48-0f96fa911b8c" config-ref="HTTP_Listener_config" path="/getAccountsV1"/>
+		<salesforce:query doc:name="Query" doc:id="be02f489-f454-4921-9c9c-04303e509ad8" config-ref="Salesforce_Config_Sandbox">
+			<salesforce:salesforce-query><![CDATA[Select Id,Name from Account 
+where Id= '001D300000v0kG2IAI' LIMIT 1]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="cf2ba050-20e7-43d6-ab77-c4d49a9ce8fe">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Name": payload[0].Name
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<xero-accounting:create-contacts doc:name="Update Or Create Contacts" doc:id="95985d68-224a-4ce1-938f-24078c7d40e3" config-ref="Xero_Accounting_Connector_Config" xeroTenantId="5ae5c021-7b20-4415-89f0-f0bbe5a76681"/>
+		<ee:transform doc:name="Transform Message" doc:id="908566ad-6836-4f11-b7c7-fc47c737f849" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<!-- [STUDIO:"Get Items"]<xero-accounting:get-items doc:name="Get Items" doc:id="2a30a861-7853-441b-8974-5a8bfd3b0df4" config-ref="Xero_Accounting_Connector_Config" xeroTenantId="5ae5c021-7b20-4415-89f0-f0bbe5a76681"/> [STUDIO] -->
+	</flow>
+	<flow name="Subscribe-SF-Platform-Events" doc:id="01dee52d-c2dc-4b7e-a085-923f4b7dd4b1" >
+		<salesforce:replay-channel-listener doc:name="Replay channel listener" doc:id="6f385371-84fb-475a-bf5b-729d821b14c2" config-ref="Salesforce_Config_New_Production" replayOption="ONLY_NEW" streamingChannel="/event/Mule_Integration__e"/>
+		<choice doc:name="Choice" doc:id="d47981e8-e584-4a16-ad7c-7399c1cf2bfd" >
+			<when expression="#[payload.data.payload.Record_Type__c == 'HouseHold']">
+				<set-variable value="#[payload.data.payload.sObjectType__c]" doc:name="Check Object Type" doc:id="99df6229-bfb6-4cab-ab41-33e804a9b4ab" variableName="sObjectType" />
+				<choice doc:name="ObjectTypeCondition" doc:id="c1934ef1-4ed1-4089-b0aa-d650bfd96023">
+			<when expression="#[vars.sObjectType == 'Account']">
+				<flow-ref doc:name="Account Sync" doc:id="32bcf1a2-ace3-4e5d-be3e-a6fe4c012ff6" name="Customer-Sync-To-Xero" />
+			</when>
+			<otherwise>
+				<flow-ref doc:name="Invoice Sync" doc:id="789ab112-7cd9-4a70-99c0-4620c5f6f244" name="Invoice-Sync-To-Xero" />
+			</otherwise>
+		</choice>
+			</when>
+		</choice>
+	</flow>
+	<sub-flow name="Invoice-Sync-To-Xero" doc:id="3b0257bb-1869-41b3-a152-49ae4d853cf5" >
+		<set-variable value="#[payload.data.payload.Record_Id__c]" doc:name="Record Id" doc:id="13d948b5-b55a-4512-b3ac-ed432e5d3879" variableName="recordId" />
+		<set-variable value="#[payload.data.payload.Event_Type__c]" doc:name="Operation Type" doc:id="49308376-5108-4591-ba67-78797b280646" variableName="OperationType" />
+		<ee:transform doc:name="Transform Message" doc:id="e7b71cea-424b-4cdb-98d2-b52854157b45" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:query doc:name="Get Invoice from Salesforce" doc:id="fe57b9ac-df9c-487a-879c-0eb30650062c" config-ref="Salesforce_Config_New_Production" >
+			<salesforce:salesforce-query ><![CDATA[SELECT Id,
+    Name, 
+    Invoice_Id__c, 
+    Account__c, 
+    Opportunity__c,
+    Amount_Credited__c, 
+    Amount_Due__c, 
+    Amount_Overdue__c, 
+    Amount_Paid__c, 
+    Credit_Note_Allocated_Credit__c, 
+    Credit_Note_Total_Amount__c, 
+    Days_Overdue__c, 
+    Delivery_Address__c, 
+    Delivery_Date__c, 
+    Delivery_Instructions__c, 
+    Due_Date__c, 
+    Expected_Payment_Date__c, 
+    Fully_Paid_On_Date__c, 
+    Invoice_Date__c, 
+    Status__c, 
+    Type__c, 
+    Last_Modified_in_Xero_Date__c, 
+    Line_Amount_Types__c, 
+    Planned_Payment_Date__c, 
+    Reference__c, 
+    Invoice_URL__c, 
+    Sent_to_Contact__c, 
+    Status_Flag__c, 
+    Sub_Total__c, 
+    Total__c, 
+    Total_Tax__c, 
+    CreatedById, 
+    LastModifiedById, 
+    OwnerId,
+    Client_Id__c,
+    Currency_Code__c,
+    Currency_Rate__c,
+    (SELECT Id,
+        Name, 
+        Line_Item_Id__c, 
+        Account_Code__c, 
+        Description__c, 
+        Discount_Rate__c, 
+        Item_Code__c, 
+        Line_Amount_4_Decimals__c, 
+        Quantity__c, 
+        Tax_Amount__c, 
+        Tax_Type__c, 
+        Tracking_Category_1__c, 
+        Tracking_Category_2__c, 
+        Unit_Price__c, 
+        Item_Code_Text__c, 
+        CreatedById, 
+        LastModifiedById
+     FROM Invoice_Line_Items__r)
+FROM Invoice__c
+WHERE Id = ':recordId']]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"recordId" : payload.data.payload.Record_Id__c
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message1" doc:id="ef029dfa-88af-4970-83e1-c3aba529e26b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload[0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Salesforce Query Payload" doc:id="ffd3d9ee-3251-4768-86de-f612e823d85d" variableName="salesforceInvoicePayload"/>
+		<ee:transform doc:name="Transform Message2" doc:id="c647becf-2ac3-46be-86fb-8d6bcfd2fc92" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    Type: "ACCREC",
+    Contact: {
+      ContactID: payload.Client_Id__c
+    },
+    DateString: payload.Invoice_Date__c as String {format: "yyyy-MM-dd'T'00:00:00"},
+    DueDateString: payload.Due_Date__c as String {format: "yyyy-MM-dd'T'00:00:00"},
+    ExpectedPaymentDate: payload.Expected_Payment_Date__c as String {format: "yyyy-MM-dd'T'00:00:00"},
+    InvoiceNumber: payload.Name,
+    Reference: payload.Reference__c,
+    Status: payload.Status__c,
+    LineAmountTypes: payload.Line_Amount_Types__c,
+    SubTotal: payload.Sub_Total__c as String default '0',
+    TotalTax: payload.Total_Tax__c as String default '0',
+    Total: payload.Total__c as String default '0',
+    CurrencyCode: payload.Currency_Code__c,
+    CurrencyRate: payload.Currency_Rate__c,
+    SentToContact: payload.Sent_to_Contact__c,
+    PlannedPaymentDate: payload.Planned_Payment_Date__c default null,
+    LineItems: (payload.Invoice_Line_Items__r) map (line) -> {
+      LineItemID: line.Line_Item_Id__c,
+      ItemCode: line.Item_Code_Text__c,
+      Description: line.Description__c,
+      Quantity: line.Quantity__c as String,
+      UnitAmount: line.Unit_Price__c as String,
+      TaxType: line.Tax_Type__c,
+      LineAmount: line.Line_Amount_4_Decimals__c as String,
+      AccountCode: line.Account_Code__c,
+      DiscountRate: line.Discount_Rate__c,
+    }
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="2c138e2f-7d64-44b0-b809-4e996afcc45b" message="Invoice - Payload Sent to XERO - #[payload]"/>
+		<xero-accounting:create-invoices doc:name="Update Or Create Invoices" doc:id="3c3a19cb-e43a-4851-b0ac-d6c7b7bc111c" config-ref="Xero_Accounting_Connector_Config" xeroTenantId="5ae5c021-7b20-4415-89f0-f0bbe5a76681"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ecbd17e9-09ec-404f-a6b4-6235318eaf5d" message='Invoice - Response from XERO - #[payload]'/>
+		<choice doc:name="hasValidationErrors" doc:id="6f83f2d2-3c55-486a-9ded-ab9cddbcae31" >
+			<when expression="#[payload.Invoices[0].HasErrors]">
+				<ee:transform doc:name="Transform Message" doc:id="c36a32c0-9ea7-4f4c-9872-f85bfed3e380" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var invoice = payload.Invoices[0]
+---
+if (invoice.HasErrors) 
+    flatten([
+        // Invoice-level validation errors (if any)
+        if (invoice.ValidationErrors? and sizeOf(invoice.ValidationErrors) > 0)
+            invoice.ValidationErrors map (e) -> 
+                {
+                    Error_Message__c: e.Message,
+                    Record_Id__c: vars.recordId,
+                    Record_Type__c : 'Invoice'
+                }
+        else [],
+        
+        // LineItem-level validation errors
+        flatten(
+            invoice.LineItems map (item) ->
+                if (item.ValidationErrors? and sizeOf(item.ValidationErrors) > 0)
+                    item.ValidationErrors map (e) ->
+                        {
+                            Error_Message__c: e.Message,
+                            Record_Id__c: vars.recordId,
+                            Record_Type__c : 'Invoice'
+                        }
+                else []
+        )
+    ])
+else []
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<salesforce:create doc:name="Create" doc:id="bafb1819-5560-4a31-b485-b0667a1a2216" config-ref="Salesforce_Config_New_Production" type="API_Log__c"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="2d53ad2d-f8d9-402e-a36e-5c99d643b26b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  invoices: payload.Invoices map (inv) -> {
+    invoiceId: inv.InvoiceID,
+    lineItemIds: inv.LineItems map (li) -> li.LineItemID
+  }
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				<set-variable value="#[payload]" doc:name="XERO Output" doc:id="a4d6792f-51e1-49a2-b596-edc245c1d556" variableName="xeroPayload" />
+				<ee:transform doc:name="Transform Message3" doc:id="f794a441-70ab-4215-a66c-d1b41235c0c7">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{
+      "id" : vars.recordId,
+     "Invoice_Id__c" : vars.xeroPayload.invoices[0].invoiceId,
+   }
+ 
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				<salesforce:update type="Invoice__c" doc:name="Update" doc:id="6715c397-a1c0-4ec3-9108-fa95a5160c14" config-ref="Salesforce_Config_New_Production" />
+				<ee:transform doc:name="Transform Message4" doc:id="e0a83b1e-3977-4f8f-9802-9a30f0249f6e">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+	 vars.xeroPayload.invoices[0].lineItemIds map (line,index) -> {
+     "Line_Item_Id__c" : line, 
+     "Id" : vars.salesforceInvoicePayload.Invoice_Line_Items__r[index].Id
+     }]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				<salesforce:update type="Invoice_Line_Item__c" doc:name="Update" doc:id="e9947969-a423-4d21-b06e-9430bafd98e5" config-ref="Salesforce_Config_New_Production" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="Customer-Sync-To-Xero" doc:id="b0034d79-4a6b-4c8a-9f40-22c551af8d18" >
+		<set-variable value="#[payload.data.payload.Record_Id__c]" doc:name="Record Id" doc:id="3efcefe1-c12a-4b4a-9bdd-1dca68f180df" variableName="recordId" />
+		<set-variable value="#[payload.data.payload.Event_Type__c]" doc:name="Operation Type" doc:id="44658150-f729-4efa-b388-293f2ad8ad18" variableName="OperationType" />
+		<ee:transform doc:name="Transform Message" doc:id="e3a34afb-0eb0-4c3d-8339-c9639ebf6c7a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:query doc:name="Get Account from Salesforce" doc:id="d58ae7aa-7a76-4adc-9f02-5da87828a4fc" config-ref="Salesforce_Config_New_Production" >
+			<salesforce:salesforce-query ><![CDATA[SELECT Id,Name,
+Entity_Id__c,
+Xero_Contact_Id__c,
+Account_Email__c,
+FinServ__PrimaryContact__r.Name, 
+FinServ__PrimaryContact__r.FirstName, 
+FinServ__PrimaryContact__r.LastName, 
+FinServ__PrimaryContact__r.Email, 
+Australian_Business_Number__c,
+ShippingStreet,ShippingCity,ShippingCountry,ShippingPostalCode,ShippingState,
+BillingStreet,BillingCity,BillingCountry,BillingPostalCode, Billingstate,
+Account_Number__c
+FROM Account 
+where Id= ':recordId' LIMIT 1]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"recordId" : payload.data.payload.Record_Id__c
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="c49d4269-3fdc-4ca3-b584-82a9314b02af" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload[0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message1" doc:id="94438a02-313a-4b20-a5cd-ea3794f3f370" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Name": payload.Name,
+	"Xero_Contact_Id__c" : payload.Xero_Contact_Id__c,
+ 	"AccountNumber": payload.Entity_Id__c,
+ 	"FirstName" : payload.FinServ__PrimaryContact__r.FirstName, 
+	"LastName" : payload.FinServ__PrimaryContact__r.LastName, 
+	"EmailAddress": payload.Account_Email__c,
+	"AccountsReceivableTaxType":"OUTPUT",
+	"SalesDefaultLineAmountType": "EXCLUSIVE",
+	"TaxNumber": payload.Australian_Business_Number__c,
+	"ContactPersons": [
+		{
+			"FirstName" : payload.FinServ__PrimaryContact__r.FirstName, 
+			"LastName" : payload.FinServ__PrimaryContact__r.LastName, 
+			"EmailAddress" : payload.FinServ__PrimaryContact__r.Email 
+		}
+	],
+	 "Addresses": [
+     {
+      "AddressType": "POBOX",
+      "AddressLine1": payload.ShippingStreet,
+      "AddressLine2": payload.ShippingState,
+      "City": payload.ShippingCity,
+      "PostalCode": payload.ShippingPostalCode,
+      "Country": payload.ShippingCountry,
+      
+     },
+      {
+      "AddressType": "STREET",
+      "AddressLine1": payload.BillingStreet,
+      "AddressLine2": payload.BillingState,
+      "City": payload.BillingCity,
+      "PostalCode": payload.BillingPostalCode,
+      "Country": payload.BillingCountry,
+     },
+     "BankAccountDetails": payload.Account_Number__c
+  ]
+  
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ca5760fd-869f-4233-82e3-8de3627d581f" message="Customer - Payload Sent to XERO - #[payload]"/>
+		<xero-accounting:create-contacts doc:name="Update Or Create Contacts" doc:id="d39a2835-6cec-4c0b-a578-c72a0a008557" config-ref="Xero_Accounting_Connector_Config" xeroTenantId="5ae5c021-7b20-4415-89f0-f0bbe5a76681" />
+		<logger level="INFO" doc:name="Logger" doc:id="00f8e6dc-80f8-4456-91ad-e470f22e9fb7" message="Customer - Response from XERO - #[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="cf48c70c-8406-40df-95f1-496d260cc3f3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{
+		"Id" : vars.recordId,
+		"Xero_Contact_Id__c" : payload.Contacts[0].ContactID
+	}
+]
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:update type="Account" doc:name="Update" doc:id="343bf697-c672-4709-b739-ead6d57837a8" config-ref="Salesforce_Config_New_Production"/>
+		<ee:transform doc:name="Transform Message" doc:id="cc74879b-d411-47f6-b19d-2dac1390df2e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<flow name="Sync-Xero-Items-Salesforce" doc:id="a1616855-e778-4e60-9309-55d1a859978c" >
+		<http:listener doc:name="Get XERO Items" doc:id="c220eb70-0e88-4849-9c8d-0167a4f75eb4" config-ref="HTTP_Listener_config" path="/getItems"/>
+		<xero-accounting:get-items doc:name="Get Items" doc:id="d6e5e0bb-0b17-44b6-8eeb-669807102fde" config-ref="Xero_Accounting_Connector_Config" xeroTenantId="5ae5c021-7b20-4415-89f0-f0bbe5a76681"/>
+		<ee:transform doc:name="Transform Message" doc:id="cdd6f2a9-4861-4265-9a70-de8849ce5bad">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+payload.Items map (item, index) -> {
+      Item_Id__c : item.ItemID,
+      Item_Code__c : item.Code,
+      Name: item.Name,
+      Description__c: item.Description,
+      Is_Tracked_As_Inventory__c: item.IsTrackedAsInventory,
+      Is_Sold__c: item.IsSold,
+      Is_Purchased__c: item.IsPurchased,
+      Inventory_Asset_Account_Code__c: item.InventoryAssetAccountCode,
+      Total_Cost_Pool__c: item.TotalCostPool,
+      Quantity_On_Hand__c: item.QuantityOnHand,
+      Purchase_Account_Code__c: if(item.IsTrackedAsInventory == true) item.PurchaseDetails.COGSAccountCode else item.PurchaseDetails.AccountCode,
+      Purchase_Tax_Type__c: item.PurchaseDetails.TaxType,
+      Purchase_Unit_Price__c: item.PurchaseDetails.UnitPrice,
+      Sales_Account_Code__c: if(item.IsTrackedAsInventory == true) item.SalesDetails.COGSAccountCode else item.SalesDetails.AccountCode,
+      Sales_Tax_Type__c: item.SalesDetails.TaxType,
+      Sales_Unit_Price__c: item.SalesDetails.UnitPrice,
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:upsert doc:name="Upsert" doc:id="7a73a505-96b6-4ecd-aa70-bb2529e69217" config-ref="Salesforce_Config_New_Production" objectType="Xero_Item__c" externalIdFieldName="Item_Id__c"/>
+		<!-- [STUDIO:"Create"]<salesforce:create doc:name="Create" doc:id="b01bd987-dec9-4dc3-b254-0b28b2d2a149" config-ref="Salesforce_Config_New_Production" type="Xero_Item__c"/> [STUDIO] -->
+	</flow>
+	<!-- [STUDIO:"intralinkFlow"]<flow name="intralinkFlow" doc:id="44da50f5-6071-47ee-ba9d-fad62ad79475" >
+		<http:listener doc:name="Listener" doc:id="b778536d-4599-46cd-be97-8798fca6be85" config-ref="HTTP_Listener_config" path="/xero-handler" allowedMethods="POST">
+			<http:response statusCode="200" >
+				<http:body ><![CDATA[#[%dw 2.0
+import dw::Crypto
+output application/json
+
+var secretKey = 'eeGaFdilIzMqwmzk7V80A1BIwPwIXp1aKicfYilyYiuIA0RRUdi+J2nVeeM913hJeJsTVXC4sDF97uQbVC7hPA=='
+
+var calculatedSignature = Crypto::HMACWith(secretKey as Binary, payload as Binary, "HmacSHA256")
+
+var receivedSignature = attributes.headers."x-signature-header-value" 
+
+&#45;&#45;-
+calculatedSignature&#93;&#93;&#93;></http:body>
+			</http:response>
+			<http:error-response >
+				<http:body ><![CDATA[#[payload&#93;&#93;&#93;></http:body>
+			</http:error-response>
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="c6cb47c2-547c-48cf-bc2b-653b9506a587" message="#[payload&#93;"/>
+		<ee:transform doc:name="Transform Message" doc:id="50dfa590-8781-47e6-b2a0-73b2248b6da4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+payload&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow> [STUDIO] -->
+<http:listener-config name="HTTP_Listener_config"
+		doc:name="HTTP Listener config"
+		doc:id="19dc3b3a-2273-4666-901f-764211511bb6">
+		<http:listener-connection host="0.0.0.0"
+			port="8081" />
+	</http:listener-config>
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="b78c0e2c-656d-474b-ba8e-d90ee56a52f8" />
+	<!-- [STUDIO:"xero-webhook-validation-api-flow"]<flow name="xero-webhook-validation-api-flow"
+		doc:id="73677011-5ea7-43b6-b1e4-d342bfc412ff">
+		<http:listener doc:name="/signature-validation"
+			doc:id="4eadc07d-48da-4350-b4ed-78a5a78228ca"
+			config-ref="HTTP_Listener_config" path="/signature-validation" >
+			<http:response statusCode="200" />
+		</http:listener>
+		<ee:transform doc:name="Set Plain Text"
+			doc:id="383ff4ec-0840-4bbd-a3b2-ba749fc71f44">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output text/plain
+&#45;&#45;-
+payload.^raw as String&#93;&#93;></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Payload Hashing and Encoding"
+			doc:id="26310428-e9dc-4dc4-a967-b4232d3b2dda">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+import dw::Crypto
+output text/plain
+import toBase64 from dw::core::Binaries
+&#45;&#45;-
+toBase64(Crypto::HMACWith("eeGaFdilIzMqwmzk7V80A1BIwPwIXp1aKicfYilyYiuIA0RRUdi+J2nVeeM913hJeJsTVXC4sDF97uQbVC7hPA==" as Binary, payload as Binary, "HmacSHA256"))
+&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable
+			value="#[attributes.headers.'x-xero-signature'&#93;" doc:name="signature"
+			doc:id="9a926d80-fb0d-4d53-81f7-ca27e3f323c1"
+			variableName="signature" />
+		<logger level="INFO" doc:name="Logger" doc:id="06ad2ec2-80ae-481f-9ab7-0198d744057f" message="#[vars.signature&#93;"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bb201b8b-c441-4d77-88ab-a0c731bd9b62" message="#[payload&#93;"/>
+		<ee:transform doc:name="Compare Signature and Hashed Key"
+			doc:id="5f6786b8-ffb4-4943-a060-51cd44ea7801">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+if(payload == vars.signature) true else false&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<validation:is-true
+			doc:id="db958c23-a654-4d77-8aa7-0a9ab430b670"
+			config-ref="Validation_Config" expression="#[payload == true&#93;"
+			message='#["validation failed due to invalid signature"&#93;'
+			doc:name="payload">
+			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN"
+				targetType="XERO:UNAUTHORIZED" />
+		</validation:is-true>
+		<ee:transform doc:name="Empty Payload &amp; 200 OK"
+			doc:id="d766553d-2896-4e52-b089-5ac57c46e400">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output text/plain
+&#45;&#45;-
+''&#93;&#93;></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+401&#93;&#93;></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3b860821-4968-4c27-8153-f34e8108966c" type="VALIDATION:INVALID_BOOLEAN">
+				<set-variable value='#["401"&#93;' doc:name="httpStatus" doc:id="a9b9eaaf-4bc3-488a-b0f0-d04ff6bb6e1c" variableName="httpStatus" />
+				<ee:transform doc:name="Error Mapping" doc:id="084ff642-6e11-47e9-9c01-71cc8161002a">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="errorMapping"><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	transactionId: correlationId,
+	errorCode: error.errorType.identifier,
+	description: error.muleMessage.typedValue default error.description,
+	message: "Unauthorized error due to invalid webhook signature"
+}&#93;&#93;></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow> [STUDIO] -->
+	<flow name="intralinkFlow" doc:id="3677ae4a-bc39-42d0-824d-0bf970fa171f" >
+		<http:listener doc:name="Listener" doc:id="19c230c4-5588-4bbe-a329-12ba13a060ec" config-ref="HTTP_Listener_config" path="/validation">
+			<http:response statusCode="201" >
+				<http:body ><![CDATA[#[%dw 2.0
+output text/plain
+---
+'']]]></http:body>
+			</http:response>
+			<http:error-response statusCode="401" />
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="4e2bcf8e-f146-408d-9462-dd83de07b488" message="#[payload]" />
+		<set-variable value="#[payload]" doc:name="Xero-Payload" doc:id="94430d55-0253-49f1-93b1-ead236aa0fda" variableName="xeroEventPayload"/>
+		<ee:transform doc:name="Transform Message" doc:id="ff835900-16c2-414a-bb57-fdc0a6168f92" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+---
+payload.^raw as String]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="6ec104bf-9fc2-429b-b289-7351bddcc830" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dw::Crypto
+output text/plain
+import toBase64 from dw::core::Binaries
+---
+toBase64(Crypto::HMACBinary("eeGaFdilIzMqwmzk7V80A1BIwPwIXp1aKicfYilyYiuIA0RRUdi+J2nVeeM913hJeJsTVXC4sDF97uQbVC7hPA==" as Binary, payload as Binary, "HMACSHA256"))
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[attributes.headers.'x-xero-signature']" doc:name="signature" doc:id="fcdd27a9-4903-4d67-846b-7eafdb166efa" variableName="signature"/>
+		<logger level="INFO" doc:name="Logger" doc:id="21b68a78-0a52-4f3e-a88a-40fab60918bc" message="#[vars.signature]" />
+		<logger level="INFO" doc:name="Logger1" doc:id="77bac9d3-c243-4dff-a280-10fa514a1479" message="#[payload]" />
+		<ee:transform doc:name="Transform Message" doc:id="2323dfb7-6d5d-4330-a77a-4112ff56befc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+if(payload == vars.signature) true else false]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<validation:is-true doc:name="Is true" doc:id="0b406e5a-2213-4188-85fe-b2b0da1ecc4d" expression="#[payload == true]"/>
+		<ee:transform doc:name="Transform Message" doc:id="689643cf-0a49-406b-82a5-1b2507ee72a6" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output text/plain
+---
+'']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="09646f10-b043-4fba-8845-d0d8226596cd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var events = vars.xeroEventPayload.events
+---
+events distinctBy $.resourceId
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="85693c51-2d45-4108-bb8c-56281508d6cf" collection="#[payload]">
+			<choice doc:name="checkEntity" doc:id="ee9e0b57-d922-44cb-8a73-63d549c0d044" >
+				<when expression='#[payload.eventCategory == "INVOICE"]'>
+					<xero-accounting:get-invoices doc:name="Get Invoices" doc:id="23b6bdaa-9ddb-446c-b01e-e972aabe7ce4" config-ref="Xero_Accounting_Connector_Config" xeroTenantId="5ae5c021-7b20-4415-89f0-f0bbe5a76681" ids="#[[payload.resourceId]]"/>
+					<logger level="INFO" doc:name="Logger" doc:id="698cc83b-059c-420e-a793-0c674c8478a3" message="#[payload]"/>
+					<set-variable value="#[payload]" doc:name="Invoice Payload" doc:id="bf2515c4-caf9-4c61-bd94-84c5d1987590" variableName="invoice" />
+					<ee:transform doc:name="Transform Message" doc:id="07236205-58a6-432b-99b0-04a4f82ff63b" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{
+	Invoice_Id__c : vars.invoice[0].InvoiceID,
+	Client_Id__c: vars.invoice[0].Contact.ContactID,
+    Invoice_Date__c: vars.invoice[0].DateString as Date {format: "yyyy-MM-dd'T'HH:mm:ss"} default null,
+    Due_Date__c: vars.invoice[0].DueDateString as Date {format: "yyyy-MM-dd'T'HH:mm:ss"} default null,
+    Expected_Payment_Date__c: vars.invoice[0].ExpectedPaymentDateString as Date {format: "yyyy-MM-dd'T'HH:mm:ss"} default null,
+    Name: vars.invoice[0].InvoiceNumber,
+    Reference__c: vars.invoice[0].Reference,
+    Status__c: vars.invoice[0].Status,
+    Line_Amount_Types__c: vars.invoice[0].LineAmountTypes,
+    Sub_Total__c: vars.invoice[0].SubTotal as Number,
+    Total_Tax__c: vars.invoice[0].TotalTax as Number,
+    Total__c: vars.invoice[0].Total as Number,
+    Currency_Code__c: vars.invoice[0].CurrencyCode,
+    Currency_Rate__c: vars.invoice[0].CurrencyRate,
+    Sent_to_Contact__c: vars.invoice[0].SentToContact default false,
+    Planned_Payment_Date__c: vars.invoice[0].PlannedPaymentDateString as Date {format: "yyyy-MM-dd'T'HH:mm:ss"} default null
+	}
+]
+	
+]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<salesforce:upsert doc:name="Upsert" doc:id="58949bce-caa9-442d-bc64-875d35c7c8e9" config-ref="Salesforce_Config_New_Production" objectType="Invoice__c" externalIdFieldName="Invoice_Id__c"/>
+					<ee:transform doc:name="Transform Message" doc:id="6e698291-1038-4397-8421-501df15719c5">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+if (payload.items != null and sizeOf(payload.items) > 0 and payload.items[0] != null and payload.items[0].exception != null and payload.items[0].exception.message != null)
+  payload.items[0].exception.message
+else
+  '']]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<choice doc:name="checkForErrors" doc:id="5804c82e-47eb-42d1-8d01-8766e6b76834">
+						<when expression="#[payload != '']">
+							<ee:transform doc:name="Transform Message" doc:id="4f156127-317e-48c3-b6e3-61753220385f">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Error_Message__c : payload,
+	Record_Id__c : vars.invoice[0].InvoiceID,
+	Record_Type__c : 'Invoice'
+}]]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+							<salesforce:create type="Api_Log__c" doc:name="Create" doc:id="01b9518e-ca45-43fa-941c-ee0aa4f8109f" config-ref="Salesforce_Config_New_Production"/>
+						</when>
+					</choice>
+					<choice doc:name="checkForItems" doc:id="55702314-daf6-4d18-ba06-864724687981">
+						<when expression="#[vars.invoice[0].LineItems !=null and sizeOf(vars.invoice[0].LineItems) &gt; 0]" >
+							<ee:transform doc:name="Transform Message" doc:id="bfc87b33-3b6b-4a52-bf48-35b471663f57">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+vars.invoice[0].LineItems map ((line, index) -> 
+{
+	    Xero_Invoice_Id__c : vars.invoice[0].InvoiceID,
+        Line_Item_Id__c: line.LineItemID,
+        Item_Code_Text__c: line.ItemCode,
+        Description__c: line.Description,
+        Quantity__c: line.Quantity as Number,
+        Unit_Price__c: line.UnitAmount as Number,
+        Tax_Type__c: line.TaxType,
+        Line_Amount_4_Decimals__c: line.LineAmount as Number,
+        Account_Code__c: line.AccountCode,
+        Discount_Rate__c: line.DiscountRate,
+        Name : line.InvoiceNumber
+})
+]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+							<salesforce:upsert doc:name="Upsert" doc:id="7614e41d-b7a8-4e0f-93aa-6536a01714f9" config-ref="Salesforce_Config_New_Production" objectType="Invoice_Line_Item__c" externalIdFieldName="Line_Item_Id__c" />
+							<ee:transform doc:name="Transform Message1" doc:id="022eb027-8c6a-4778-8fe3-699885b18e08">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+(payload.items filter (item) -> item.exception != null) map ((item, index) -> 
+Error_Message__c : item.message
+)
+]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+							<choice doc:name="checkForErrors1" doc:id="73b61012-0384-41eb-a3f5-65796b41be27">
+						<when expression="#[payload != '']">
+							<ee:transform doc:name="Transform Message" doc:id="8c91d026-b9a4-46e9-a1ea-c1470c8d1762">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Error_Message__c : payload,
+	Record_Id__c : vars.invoice[0].InvoiceID,
+	Record_Type__c : 'InvoiceLineItem'
+}]]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+							<salesforce:create type="Api_Log__c" doc:name="Create" doc:id="8efbb283-bd21-4889-8ce7-ee4c20e88e5f" config-ref="Salesforce_Config_New_Production" />
+						</when>
+					</choice>
+						</when>
+					</choice>
+				</when>
+				<otherwise >
+					<xero-accounting:get-contacts-by-contact-id doc:name="Get Contact By Contact ID" doc:id="a1da3984-b115-45b9-bd99-22414b90113f" config-ref="Xero_Accounting_Connector_Config" contactId="#[payload.resourceId]" xeroTenantId="5ae5c021-7b20-4415-89f0-f0bbe5a76681"/>
+					<logger level="INFO" doc:name="Logger" doc:id="5475c78b-a806-494e-b7f3-7551f904ef08" message="#[payload]"/>
+					<ee:transform doc:name="Transform Message" doc:id="c9dbbcb8-c9f2-4942-a2f9-dc024bc853f0" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{
+		Xero_Contact_Id__c: payload.ContactId,
+		Name: payload.Name,
+ 		Entity_Id__c : payload.AccountNumber,
+ 		FirstName: payload.FirstName, 
+		LastName : payload.LastName,
+     	Account_Number__c: payload.BankAccountDetails,
+     	Australian_Business_Number__c: payload.TaxNumber,
+	}
+]
+	
+]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<salesforce:upsert doc:name="Upsert" doc:id="21a7b3a9-41a4-4be0-a5af-751a835efd59" config-ref="Salesforce_Config_New_Production" objectType="Account" externalIdFieldName="Xero_Contact_Id__c"/>
+				</otherwise>
+			</choice>
+		</foreach>
+		<error-handler >
+			<!-- [STUDIO:"On Error Continue"]<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c12a7920-d0cd-458c-af35-365d08048b48" type="VALIDATION:INVALID_BOOLEAN">
+				<set-variable value="401" doc:name="Set Variable" doc:id="4fba8d3c-9e0d-4959-a2fc-4034cf0496e1" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="7fb43ee2-a8a7-4250-aa97-2cfa8a266524" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="errorMapping" ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	transactionId: correlationId,
+	errorCode: error.errorType.identifier,
+	description: error.muleMessage.typedValue default error.description,
+	message: "Unauthorized error due to invalid webhook signature"
+}&#93;&#93;></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-continue> [STUDIO] -->
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="68160832-afaa-47d8-a77b-d947ef9a71e0" type="VALIDATION:INVALID_BOOLEAN">
+				<set-payload value="#['Not Matched']" doc:name="Set Payload" doc:id="a7184050-6b0a-4ee4-b63c-9afeb61a248e" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	
+</mule>

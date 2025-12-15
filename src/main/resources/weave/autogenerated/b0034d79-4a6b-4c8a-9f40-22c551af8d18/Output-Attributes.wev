@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_b0034d79_4a6b_4c8a_9f40_22c551af8d18_Output_Attributes = {|
+  statusCode: Number, 
+  headers: { _?: String }, 
+  reasonPhrase: String
+|} {"typeId": "com.mulesoft.connectivity.xeroaccountingconnector.rest.commons.api.operation.HttpResponseAttributes",
+"typeAlias": "HttpResponseAttributes"}
+
